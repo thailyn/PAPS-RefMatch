@@ -33,6 +33,10 @@ print "$steps\n";
 
 sub levenshtein_distance {
   my ($s, $t, $s_s, $s_t, $a, $memo) = @_;
+  $s_s ||= "";
+  $s_t ||= "";
+  $a ||= "";
+  $memo ||= { };
 
   my ($len_s, $len_t) = (length($s), length($t));
   my $key = "$s|$t";
