@@ -31,7 +31,7 @@ print "$second_exploded\n";
 print "$steps\n";
 
 
-sub levenshtein_distance {
+sub levenshtein_distance_detailed {
   my ($s, $t, $s_s, $s_t, $a, $memo) = @_;
   $s_s ||= "";
   $s_t ||= "";
@@ -54,11 +54,11 @@ sub levenshtein_distance {
 
   my ($first, $second, $third);
   my ($s_s1, $s_t1, $a1, $s_s2, $s_t2, $a2, $s_s3, $s_t3, $a3);
-  ($first, $s_s1, $s_t1, $a1) = levenshtein_distance(substr($s, 0, $len_s - 1), $t, $s_s, $s_t, $a, $memo);
+  ($first, $s_s1, $s_t1, $a1) = levenshtein_distance_detailed(substr($s, 0, $len_s - 1), $t, $s_s, $s_t, $a, $memo);
   $first = $first + 1;
-  ($second, $s_s2, $s_t2, $a2) = levenshtein_distance($s, substr($t, 0, $len_t - 1), $s_s, $s_t, $a, $memo);
+  ($second, $s_s2, $s_t2, $a2) = levenshtein_distance_detailed($s, substr($t, 0, $len_t - 1), $s_s, $s_t, $a, $memo);
   $second = $second + 1;
-  ($third, $s_s3, $s_t3, $a3) = levenshtein_distance(substr($s, 0, $len_s - 1), substr($t, 0, $len_t - 1), $s_s, $s_t, $a, $memo);
+  ($third, $s_s3, $s_t3, $a3) = levenshtein_distance_detailed(substr($s, 0, $len_s - 1), substr($t, 0, $len_t - 1), $s_s, $s_t, $a, $memo);
   $third = $third + $cost;
 
   if ($first <= $second && $first <= $third) {
