@@ -22,8 +22,7 @@ die "$0: Must provide two stirngs on input.\n" unless (defined $first_string && 
 print "first: $first_string\n";
 print "second: $second_string\n";
 
-my $memo = { };
-my ($distance, $first_exploded, $second_exploded, $steps) = levenshtein_distance($first_string, $second_string, "", "", "", { });
+my ($distance, $first_exploded, $second_exploded, $steps) = levenshtein_distance_detailed($first_string, $second_string);
 
 print "Levenshtein distance between '$first_string' and '$second_string': $distance.\n";
 print "$first_exploded\n";
