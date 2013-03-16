@@ -30,6 +30,37 @@ print "$second_exploded\n";
 print "$steps\n";
 
 
+sub levenshtein_distance {
+  my ($s, $t, $memo) = @_;
+  $memo ||= { };
+
+  my ($len_s, $len_t) = (length($s), length($t));
+  my $key = "$s|$t";
+
+  if (defined $memo->{$key}) {
+    #print "Using memoization of key '$key' ($memo->{$key}).\n";
+    my $value = $memo->{$key};
+    return $value;
+  }
+  
+  return $len_s if $len_t == 0;
+  return $len_t if $len_s == 0;
+
+  my $cost = uc(substr($s, -1, 1)) ne uc(substr($t, -1, 1));
+
+  my ($first, $second, $third);
+  $first = levenshtein_distance(substr($s, 0, $len_s - 1), $t, $memo) + 1;
+  $second = levenshtein_distance($s, substr($t, 0, $len_t - 1), $memo) + 1;
+  $third = levenshtein_distance(substr($s, 0, $len_s - 1), substr($t, 0, $len_t - 1), $memo) + $cost;
+
+  my $min = $first < $second ? $first : $second;
+  $min = $min < $third ? $min : $third;
+
+  #print "dist of '$s' and '$t' is $min.\n";
+  $memo->{$key} = $min;
+  return $min;
+}
+
 sub levenshtein_distance_detailed {
   my ($s, $t, $s_s, $s_t, $a, $memo) = @_;
   $s_s ||= "";
