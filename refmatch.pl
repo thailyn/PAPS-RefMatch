@@ -51,6 +51,11 @@ my $citation_index = int(rand(@{ $citations }));
 my $citation = $citations->[$citation_index];
 print "Using citation #" . $citation_index . ": " . $citation->getTitle . "(" . $citation->getString . ")\n";
 
+if (length($citation->getTitle) <= 0) {
+  print "Warning: Could not extract title from citation.  Using full reference text for title.\n\n";
+  $citation->setTitle($citation->getString);
+}
+
 #my $reference_index = int(rand($ref_count));
 #my ($ref) = $ref_rs->slice($reference_index, $reference_index);
 #print "Using reference #" . $reference_index . ": " . $ref->reference_text . "\n";
