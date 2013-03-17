@@ -13,8 +13,8 @@ my $schema = PAPS::Database::papsdb::Schema->connect('dbi:Pg:dbname=papsdb',
 my $works_rs = $schema->resultset('Work');
 
 # Fetch the set of all references, sorted by referencing work
-my $ref_rs = $schema->resultset('WorkReference')->search(undef,
-                                                         { order_by => 'referencing_work_id'});
+my $ref_rs = $schema->resultset('WorkReference')->search('me.referenced_work_id' => undef,
+                                                         { order_by => [ 'referencing_work_id', 'id' ]});
 
 print "Works\n";
 while (my $work = $works_rs->next) {
