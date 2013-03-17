@@ -43,11 +43,11 @@ my ($min_distance, $min_first_exploded, $min_second_exploded, $min_steps, $min_w
 
 while (my $work = $works_rs->next) {
   my ($distance, $first_exploded, $second_exploded, $steps) = levenshtein_distance_detailed($ref->reference_text, $work->display_name);
-  #print "Distance: $distance\n";
-  #print "$first_exploded\n";
-  #print "$second_exploded\n";
-  #print "$steps\n";
-  #print "\n";
+  $progress->message("Distance: $distance");
+  $progress->message("$first_exploded");
+  $progress->message("$second_exploded");
+  $progress->message("$steps");
+  $progress->message("\n");
 
   if ($distance < $min_distance) {
     $min_distance = $distance;
