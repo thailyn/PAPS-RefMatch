@@ -20,11 +20,13 @@ print "Works\n";
 while (my $work = $works_rs->next) {
   print $work->id . "\t" . $work->display_name . "\n";
 }
+$works_rs->reset;
 
 print "Referneces\n";
 while (my $ref = $ref_rs->next) {
   print $ref->id . "\t" . ($ref->referencing_work_id || "null") . "\t" . $ref->reference_text . "\n";
 }
+$ref_rs->reset;
 
 
 # Test Levenshtein distance algorithm if two strings are provided.
