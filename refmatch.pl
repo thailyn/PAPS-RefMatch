@@ -24,11 +24,11 @@ while (my $work = $works_rs->next) {
 }
 $works_rs->reset;
 
-print "Referneces\n";
-while (my $ref = $ref_rs->next) {
-  print $ref->id . "\t" . ($ref->referencing_work_id || "null") . "\t" . $ref->reference_text . "\n";
-}
-$ref_rs->reset;
+#print "Referneces\n";
+#while (my $ref = $ref_rs->next) {
+#  print $ref->id . "\t" . ($ref->referencing_work_id || "null") . "\t" . $ref->reference_text . "\n";
+#}
+#$ref_rs->reset;
 
 my $reference_index = int(rand($ref_count));
 my ($ref) = $ref_rs->slice($reference_index, $reference_index);
