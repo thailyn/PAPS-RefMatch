@@ -4,6 +4,7 @@
 #  perl -I../PAPS-Database-papsdb-Schema/lib/ refmatch.pl
 use strict;
 use warnings;
+use Term::ProgressBar::Simple;
 use PAPS::Database::papsdb::Schema;
 
 my $schema = PAPS::Database::papsdb::Schema->connect('dbi:Pg:dbname=papsdb',
@@ -11,6 +12,7 @@ my $schema = PAPS::Database::papsdb::Schema->connect('dbi:Pg:dbname=papsdb',
 
 # Fetch the set of works
 my $works_rs = $schema->resultset('Work');
+my $works_count = $works_rs->count;
 
 # Fetch the set of all references, sorted by referencing work
 my $ref_rs = $schema->resultset('WorkReference')->search('me.referenced_work_id' => undef,
@@ -34,17 +36,18 @@ my $reference_index = int(rand($ref_count));
 my ($ref) = $ref_rs->slice($reference_index, $reference_index);
 print "Using reference #" . $reference_index . ": " . $ref->reference_text . "\n";
 
+my $progress = Term::ProgressBar::Simple->new($works_count);
+
 my ($min_distance, $min_first_exploded, $min_second_exploded, $min_steps, $min_work) =
   (length($ref->reference_text) * 1000, "", "", "", undef);
 
 while (my $work = $works_rs->next) {
   my ($distance, $first_exploded, $second_exploded, $steps) = levenshtein_distance_detailed($ref->reference_text, $work->display_name);
-  print "Distance: $distance\n";
-  print "$first_exploded\n";
-  print "$second_exploded\n";
-  print "$steps\n";
-  print "\n";
-  #print $work->id . "\t" . $work->display_name . "\n";
+  #print "Distance: $distance\n";
+  #print "$first_exploded\n";
+  #print "$second_exploded\n";
+  #print "$steps\n";
+  #print "\n";
 
   if ($distance < $min_distance) {
     $min_distance = $distance;
@@ -53,9 +56,9 @@ while (my $work = $works_rs->next) {
     $min_steps = $steps;
     $min_work = $work;
   }
+  $progress++;
 }
 
-print (("=" x 80) . "\n\n");
 print "Best match:\n";
 print "-----------\n";
 print "Distance: $min_distance\n";
