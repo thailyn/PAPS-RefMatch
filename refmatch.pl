@@ -59,6 +59,7 @@ while (my $work = $works_rs->next) {
   $progress++;
 }
 
+print "\n\n";
 print "Best match:\n";
 print "-----------\n";
 print "Distance: $min_distance\n";
