@@ -6,6 +6,7 @@ use strict;
 use warnings;
 use Term::ProgressBar::Simple;
 use PAPS::Database::papsdb::Schema;
+use ParsCit::Controller;
 
 my $schema = PAPS::Database::papsdb::Schema->connect('dbi:Pg:dbname=papsdb',
                                                      'papsuser', '');
@@ -32,17 +33,26 @@ $works_rs->reset;
 #}
 #$ref_rs->reset;
 
-my $reference_index = int(rand($ref_count));
-my ($ref) = $ref_rs->slice($reference_index, $reference_index);
-print "Using reference #" . $reference_index . ": " . $ref->reference_text . "\n";
+my @parse_output = ParsCit::Controller::ExtractCitationsImpl('/home/charles/projects/PAPS-RefMatch/data/cite_test3');
+my $citations = $parse_output[2];
+my $citation_index = int(rand(@{ $citations }));
+my $citation = $citations->[$citation_index];
+print "Using citation #" . $citation_index . ": " . $citation->getTitle . "(" . $citation->getString . ")\n";
+
+#my $reference_index = int(rand($ref_count));
+#my ($ref) = $ref_rs->slice($reference_index, $reference_index);
+#print "Using reference #" . $reference_index . ": " . $ref->reference_text . "\n";
 
 my $progress = Term::ProgressBar::Simple->new($works_count);
 
+#my ($min_distance, $min_first_exploded, $min_second_exploded, $min_steps, $min_work) =
+#  (length($ref->reference_text) * 1000, "", "", "", undef);
 my ($min_distance, $min_first_exploded, $min_second_exploded, $min_steps, $min_work) =
-  (length($ref->reference_text) * 1000, "", "", "", undef);
+  (length($citation->getTitle) * 1000, "", "", "", undef);
 
 while (my $work = $works_rs->next) {
-  my ($distance, $first_exploded, $second_exploded, $steps) = levenshtein_distance_detailed($ref->reference_text, $work->display_name);
+  #my ($distance, $first_exploded, $second_exploded, $steps) = levenshtein_distance_detailed($ref->reference_text, $work->display_name);
+  my ($distance, $first_exploded, $second_exploded, $steps) = levenshtein_distance_detailed($citation->getTitle, $work->display_name);
   $progress->message("Distance: $distance");
   $progress->message("$first_exploded");
   $progress->message("$second_exploded");
@@ -63,13 +73,17 @@ print "\n\n";
 print "Best match:\n";
 print "-----------\n";
 print "Distance: $min_distance\n";
-print "Reference length: " . length($ref->reference_text) . "\n";
+#print "Reference length: " . length($ref->reference_text) . "\n";
+print "Reference length: " . length($citation->getTitle) . "\n";
 print "Work length:      " . length($min_work->display_name) . "\n";
-print "Length ratio:     " . (length($min_work->display_name) / length($ref->reference_text)) . "\n";
-print "Match percent:    " . ((length($ref->reference_text) - $min_distance) / length($ref->reference_text)) . "\n";
+#print "Length ratio:     " . (length($min_work->display_name) / length($ref->reference_text)) . "\n";
+print "Length ratio:     " . (length($min_work->display_name) / length($citation->getTitle)) . "\n";
+#print "Match percent:    " . ((length($ref->reference_text) - $min_distance) / length($ref->reference_text)) . "\n";
+print "Match percent:    " . ((length($citation->getTitle) - $min_distance) / length($citation->getTitle)) . "\n";
 print "\n";
 print "Work display name: " . $min_work->display_name . "\n";
-print "Reference text:    " . $ref->reference_text . "\n";
+#print "Reference text:    " . $ref->reference_text . "\n";
+print "Reference text:    " . $citation->getTitle . "\n";
 print "\n";
 print "$min_first_exploded\n";
 print "$min_second_exploded\n";
