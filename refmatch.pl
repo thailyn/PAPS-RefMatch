@@ -1,12 +1,14 @@
 #!/user/bin/perl
 
-# easily use this script with
-#  perl -I../PAPS-Database-papsdb-Schema/lib/ refmatch.pl
+# This script is not so easily run anymore.  Refer to shell script
+# to see what additional include directories and switches are needed.
 use strict;
 use warnings;
 use Term::ProgressBar::Simple;
 use PAPS::Database::papsdb::Schema;
 use ParsCit::Controller;
+
+my $VERSION = 0.001;
 
 my $verbose = 0;
 
