@@ -28,6 +28,21 @@ while (my $ref = $ref_rs->next) {
 }
 $ref_rs->reset;
 
+# now compare the first reference against all works using the levenshtein
+# distance
+my $ref = $ref_rs->next;
+print "Testing reference (" . $ref->id . " ): " . $ref->reference_text . "\n";
+while (my $work = $works_rs->next) {
+  my ($distance, $first_exploded, $second_exploded, $steps) = levenshtein_distance_detailed($ref->reference_text, $work->display_name);
+  print "Distance: $distance\n";
+  print "$first_exploded\n";
+  print "$second_exploded\n";
+  print "$steps\n";
+  print "\n";
+  #print $work->id . "\t" . $work->display_name . "\n";
+}
+
+
 
 # Test Levenshtein distance algorithm if two strings are provided.
 my ($first_string, $second_string) = @ARGV;
