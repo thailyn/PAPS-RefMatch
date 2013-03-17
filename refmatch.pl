@@ -55,6 +55,13 @@ while (my $work = $works_rs->next) {
   }
 }
 
+print (("=" x 80) . "\n");
+print "Minimum values found.\n";
+print "Distance: $min_distance\n";
+print "$min_first_exploded\n";
+print "$min_second_exploded\n";
+print "$min_steps\n";
+print "\n";
 
 # Test Levenshtein distance algorithm if two strings are provided.
 my ($first_string, $second_string) = @ARGV;
