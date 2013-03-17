@@ -8,6 +8,8 @@ use Term::ProgressBar::Simple;
 use PAPS::Database::papsdb::Schema;
 use ParsCit::Controller;
 
+my $verbose = 0;
+
 my $schema = PAPS::Database::papsdb::Schema->connect('dbi:Pg:dbname=papsdb',
                                                      'papsuser', '');
 
@@ -21,11 +23,13 @@ my $ref_rs = $schema->resultset('WorkReference')->search('me.referenced_work_id'
 my $ref_count = $ref_rs->count;
 print "Number of references without a referenced work: " . $ref_count . "\n";
 
-print "Works\n";
-while (my $work = $works_rs->next) {
-  print $work->id . "\t" . $work->display_name . "\n";
+if ($verbose) {
+  print "Works\n";
+  while (my $work = $works_rs->next) {
+    print $work->id . "\t" . $work->display_name . "\n";
+  }
+  $works_rs->reset;
 }
-$works_rs->reset;
 
 #print "Referneces\n";
 #while (my $ref = $ref_rs->next) {
@@ -53,11 +57,11 @@ my ($min_distance, $min_first_exploded, $min_second_exploded, $min_steps, $min_w
 while (my $work = $works_rs->next) {
   #my ($distance, $first_exploded, $second_exploded, $steps) = levenshtein_distance_detailed($ref->reference_text, $work->display_name);
   my ($distance, $first_exploded, $second_exploded, $steps) = levenshtein_distance_detailed($citation->getTitle, $work->display_name);
-  $progress->message("Distance: $distance");
-  $progress->message("$first_exploded");
-  $progress->message("$second_exploded");
-  $progress->message("$steps");
-  $progress->message("\n");
+  $progress->message("Distance: $distance") if $verbose;
+  $progress->message("$first_exploded") if $verbose;
+  $progress->message("$second_exploded") if $verbose;
+  $progress->message("$steps") if $verbose;
+  $progress->message("\n") if $verbose;
 
   if ($distance < $min_distance) {
     $min_distance = $distance;
