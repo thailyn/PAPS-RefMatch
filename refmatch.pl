@@ -57,6 +57,8 @@ sub test_distance {
 
 
 sub levenshtein_distance {
+  no warnings 'recursion';
+
   my ($s, $t, $memo) = @_;
   $memo ||= { };
 
@@ -88,6 +90,8 @@ sub levenshtein_distance {
 }
 
 sub levenshtein_distance_detailed {
+  no warnings 'recursion';
+
   my ($s, $t, $s_s, $s_t, $a, $memo) = @_;
   $s_s ||= "";
   $s_t ||= "";
