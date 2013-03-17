@@ -37,6 +37,7 @@ print "Using reference #" . $reference_index . ": " . $ref->reference_text . "\n
 # distance
 #my $ref = $ref_rs->next;
 #print "Testing reference (" . $ref->id . " ): " . $ref->reference_text . "\n";
+my ($min_distance, $min_first_exploded, $min_second_exploded, $min_steps) = (length($ref->reference_text) * 1000, "", "", "");
 while (my $work = $works_rs->next) {
   my ($distance, $first_exploded, $second_exploded, $steps) = levenshtein_distance_detailed($ref->reference_text, $work->display_name);
   print "Distance: $distance\n";
@@ -45,8 +46,14 @@ while (my $work = $works_rs->next) {
   print "$steps\n";
   print "\n";
   #print $work->id . "\t" . $work->display_name . "\n";
-}
 
+  if ($distance < $min_distance) {
+    $min_distance = $distance;
+    $min_first_exploded = $first_exploded;
+    $min_second_exploded = $second_exploded;
+    $min_steps = $steps;
+  }
+}
 
 
 # Test Levenshtein distance algorithm if two strings are provided.
