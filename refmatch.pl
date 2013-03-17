@@ -17,17 +17,29 @@ use warnings;
 #                                                         { order_by => 'referencing_work_id'});
 
 my ($first_string, $second_string) = @ARGV;
-die "$0: Must provide two stirngs on input.\n" unless (defined $first_string && defined $second_string);
+if (defined $first_string && defined $second_string) {
+  test_distance($first_string, $second_string);
+}
+else {
+  print "Skipping Levenshtein test -- no strings provided on imput.\n";
+}
 
-print "first: $first_string\n";
-print "second: $second_string\n";
 
-my ($distance, $first_exploded, $second_exploded, $steps) = levenshtein_distance_detailed($first_string, $second_string);
+sub test_distance {
+  my ($first_string, $second_string) = @_;
 
-print "Levenshtein distance between '$first_string' and '$second_string': $distance.\n";
-print "$first_exploded\n";
-print "$second_exploded\n";
-print "$steps\n";
+  print "Testing Levenshtein distance.\n";
+  print "first: $first_string\n";
+  print "second: $second_string\n";
+
+  my ($distance, $first_exploded, $second_exploded, $steps) = levenshtein_distance_detailed($first_string, $second_string);
+
+  print "Levenshtein distance between '$first_string' and '$second_string': $distance.\n";
+  print "$first_exploded\n";
+  print "$second_exploded\n";
+  print "$steps\n";
+}
+
 
 
 sub levenshtein_distance {
