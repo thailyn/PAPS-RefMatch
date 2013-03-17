@@ -33,11 +33,10 @@ $works_rs->reset;
 my $reference_index = int(rand($ref_count));
 my ($ref) = $ref_rs->slice($reference_index, $reference_index);
 print "Using reference #" . $reference_index . ": " . $ref->reference_text . "\n";
-# now compare the first reference against all works using the levenshtein
-# distance
-#my $ref = $ref_rs->next;
-#print "Testing reference (" . $ref->id . " ): " . $ref->reference_text . "\n";
-my ($min_distance, $min_first_exploded, $min_second_exploded, $min_steps, $min_work) = (length($ref->reference_text) * 1000, "", "", "", undef);
+
+my ($min_distance, $min_first_exploded, $min_second_exploded, $min_steps, $min_work) =
+  (length($ref->reference_text) * 1000, "", "", "", undef);
+
 while (my $work = $works_rs->next) {
   my ($distance, $first_exploded, $second_exploded, $steps) = levenshtein_distance_detailed($ref->reference_text, $work->display_name);
   print "Distance: $distance\n";
