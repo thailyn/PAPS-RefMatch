@@ -31,49 +31,51 @@ if ($verbose) {
   $works_rs->reset;
 }
 
+# Create temp file to hold references.
 my $fh;
 my $temp_file_name = 'data/temp-ref-match' . time;
 open($fh, ">", $temp_file_name) or die "$0: Cannot open temp file '$temp_file_name' for writing: $!\n";
 print $fh "References\n";
 
-#print "Referneces\n";
+# Add each reference's string to temp file.
 while (my $ref = $ref_rs->next) {
-  #print $ref->id . "\t" . ($ref->referencing_work_id || "null") . "\t" . $ref->reference_text . "\n";
   print $fh $ref->reference_text . "\n\n";
 }
 $ref_rs->reset;
 close($fh);
 
-#my @parse_output = ParsCit::Controller::ExtractCitationsImpl('/home/charles/projects/PAPS-RefMatch/data/cite_test3');
+# Use ParsCit to parse citations.
 my @parse_output = ParsCit::Controller::ExtractCitationsImpl($temp_file_name);
+
+# Pick a random citation to compare against the works.
 my $citations = $parse_output[2];
 my $citation_index = int(rand(@{ $citations }));
 my $citation = $citations->[$citation_index];
+
 print "\n";
 print "Using citation #" . $citation_index . ".\n";
 print "Title:     " . $citation->getTitle . "\n";
 print "Full text: " . $citation->getString . "\n";
 print "\n";
 
+# Use the whole reference text if a title could not be parsed.
 if (length($citation->getTitle) <= 0) {
   print "Warning: Could not extract title from citation.  Using full reference text for title.\n\n";
   $citation->setTitle($citation->getString);
 }
 
-#my $reference_index = int(rand($ref_count));
-#my ($ref) = $ref_rs->slice($reference_index, $reference_index);
-#print "Using reference #" . $reference_index . ": " . $ref->reference_text . "\n";
-
+# Initialize a progress bar.
 my $progress = Term::ProgressBar::Simple->new($works_count);
 
-#my ($min_distance, $min_first_exploded, $min_second_exploded, $min_steps, $min_work) =
-#  (length($ref->reference_text) * 1000, "", "", "", undef);
 my ($min_distance, $min_first_exploded, $min_second_exploded, $min_steps, $min_work) =
   (length($citation->getTitle) * 1000, "", "", "", undef);
 
+# Iterate through each work and compute its Levenshtein distance
+# with the selected reference.  Only print each work's results if
+# we want verbose output.  Store the best match's info as we go along.
 while (my $work = $works_rs->next) {
-  #my ($distance, $first_exploded, $second_exploded, $steps) = levenshtein_distance_detailed($ref->reference_text, $work->display_name);
-  my ($distance, $first_exploded, $second_exploded, $steps) = levenshtein_distance_detailed($citation->getTitle, $work->display_name);
+  my ($distance, $first_exploded, $second_exploded, $steps) =
+    levenshtein_distance_detailed($citation->getTitle, $work->display_name);
   $progress->message("Distance: $distance") if $verbose;
   $progress->message("$first_exploded") if $verbose;
   $progress->message("$second_exploded") if $verbose;
@@ -90,20 +92,17 @@ while (my $work = $works_rs->next) {
   $progress++;
 }
 
+# Print out the results.
 print "\n\n";
 print "Best match:\n";
 print "-----------\n";
 print "Distance: $min_distance\n";
-#print "Reference length: " . length($ref->reference_text) . "\n";
 print "Reference length: " . length($citation->getTitle) . "\n";
 print "Work length:      " . length($min_work->display_name) . "\n";
-#print "Length ratio:     " . (length($min_work->display_name) / length($ref->reference_text)) . "\n";
 print "Length ratio:     " . (length($min_work->display_name) / length($citation->getTitle)) . "\n";
-#print "Match percent:    " . ((length($ref->reference_text) - $min_distance) / length($ref->reference_text)) . "\n";
 print "Match percent:    " . ((length($citation->getTitle) - $min_distance) / length($citation->getTitle)) . "\n";
 print "\n";
 print "Work display name: " . $min_work->display_name . "\n";
-#print "Reference text:    " . $ref->reference_text . "\n";
 print "Reference text:    " . $citation->getTitle . "\n";
 print "\n";
 print "$min_first_exploded\n";
