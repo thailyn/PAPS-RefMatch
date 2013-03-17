@@ -56,9 +56,16 @@ while (my $work = $works_rs->next) {
 }
 
 print (("=" x 80) . "\n\n");
-print "Minimum values found.\n";
+print "Best match:\n";
+print "-----------\n";
 print "Distance: $min_distance\n";
+print "Reference length: " . length($ref->reference_text) . "\n";
+print "Work length:      " . length($min_work->display_name) . "\n";
+print "Match percent:    " . (length($min_work->display_name) / length($ref->reference_text)) . "\n";
+print "\n";
 print "Work display name: " . $min_work->display_name . "\n";
+print "Reference text:    " . $ref->reference_text . "\n";
+print "\n";
 print "$min_first_exploded\n";
 print "$min_second_exploded\n";
 print "$min_steps\n";
