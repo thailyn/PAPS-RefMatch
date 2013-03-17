@@ -55,7 +55,7 @@ while (my $work = $works_rs->next) {
   }
 }
 
-print (("=" x 80) . "\n");
+print (("=" x 80) . "\n\n");
 print "Minimum values found.\n";
 print "Distance: $min_distance\n";
 print "Work display name: " . $min_work->display_name . "\n";
