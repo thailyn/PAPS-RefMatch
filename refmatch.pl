@@ -31,13 +31,21 @@ if ($verbose) {
   $works_rs->reset;
 }
 
-#print "Referneces\n";
-#while (my $ref = $ref_rs->next) {
-#  print $ref->id . "\t" . ($ref->referencing_work_id || "null") . "\t" . $ref->reference_text . "\n";
-#}
-#$ref_rs->reset;
+my $fh;
+my $temp_file_name = 'data/temp-ref-match' . time;
+open($fh, ">", $temp_file_name) or die "$0: Cannot open temp file '$temp_file_name' for writing: $!\n";
+print $fh "References\n";
 
-my @parse_output = ParsCit::Controller::ExtractCitationsImpl('/home/charles/projects/PAPS-RefMatch/data/cite_test3');
+#print "Referneces\n";
+while (my $ref = $ref_rs->next) {
+  #print $ref->id . "\t" . ($ref->referencing_work_id || "null") . "\t" . $ref->reference_text . "\n";
+  print $fh $ref->reference_text . "\n\n";
+}
+$ref_rs->reset;
+close($fh);
+
+#my @parse_output = ParsCit::Controller::ExtractCitationsImpl('/home/charles/projects/PAPS-RefMatch/data/cite_test3');
+my @parse_output = ParsCit::Controller::ExtractCitationsImpl($temp_file_name);
 my $citations = $parse_output[2];
 my $citation_index = int(rand(@{ $citations }));
 my $citation = $citations->[$citation_index];
