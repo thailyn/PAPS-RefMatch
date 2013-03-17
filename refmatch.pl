@@ -49,7 +49,11 @@ my @parse_output = ParsCit::Controller::ExtractCitationsImpl($temp_file_name);
 my $citations = $parse_output[2];
 my $citation_index = int(rand(@{ $citations }));
 my $citation = $citations->[$citation_index];
-print "Using citation #" . $citation_index . ": " . $citation->getTitle . "(" . $citation->getString . ")\n";
+print "\n";
+print "Using citation #" . $citation_index . ".\n";
+print "Title:     " . $citation->getTitle . "\n";
+print "Full text: " . $citation->getString . "\n";
+print "\n";
 
 if (length($citation->getTitle) <= 0) {
   print "Warning: Could not extract title from citation.  Using full reference text for title.\n\n";
