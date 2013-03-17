@@ -4,18 +4,19 @@
 #  perl -I../PAPS-Database-papsdb-Schema/lib/ refmatch.pl
 use strict;
 use warnings;
-#use PAPS::Database::papsdb::Schema;
+use PAPS::Database::papsdb::Schema;
 
-#my $schema = PAPS::Database::papsdb::Schema->connect('dbi:Pg:dbname=papsdb',
-#                                                     'papsuser', '');
-#
-## Fetch the set of works
-#my $works_rs = $schema->resultset('Work');
-#
-## Fetch the set of all references, sorted by referencing work
-#my $ref_rs = $schema->resultset('WorkReference')->search(undef,
-#                                                         { order_by => 'referencing_work_id'});
+my $schema = PAPS::Database::papsdb::Schema->connect('dbi:Pg:dbname=papsdb',
+                                                     'papsuser', '');
 
+# Fetch the set of works
+my $works_rs = $schema->resultset('Work');
+
+# Fetch the set of all references, sorted by referencing work
+my $ref_rs = $schema->resultset('WorkReference')->search(undef,
+                                                         { order_by => 'referencing_work_id'});
+
+# Test Levenshtein distance algorithm if two strings are provided.
 my ($first_string, $second_string) = @ARGV;
 if (defined $first_string && defined $second_string) {
   test_distance($first_string, $second_string);
