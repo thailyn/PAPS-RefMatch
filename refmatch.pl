@@ -37,7 +37,7 @@ print "Using reference #" . $reference_index . ": " . $ref->reference_text . "\n
 # distance
 #my $ref = $ref_rs->next;
 #print "Testing reference (" . $ref->id . " ): " . $ref->reference_text . "\n";
-my ($min_distance, $min_first_exploded, $min_second_exploded, $min_steps) = (length($ref->reference_text) * 1000, "", "", "");
+my ($min_distance, $min_first_exploded, $min_second_exploded, $min_steps, $min_work) = (length($ref->reference_text) * 1000, "", "", "", undef);
 while (my $work = $works_rs->next) {
   my ($distance, $first_exploded, $second_exploded, $steps) = levenshtein_distance_detailed($ref->reference_text, $work->display_name);
   print "Distance: $distance\n";
@@ -52,12 +52,14 @@ while (my $work = $works_rs->next) {
     $min_first_exploded = $first_exploded;
     $min_second_exploded = $second_exploded;
     $min_steps = $steps;
+    $min_work = $work;
   }
 }
 
 print (("=" x 80) . "\n");
 print "Minimum values found.\n";
 print "Distance: $min_distance\n";
+print "Work display name: " . $min_work->display_name . "\n";
 print "$min_first_exploded\n";
 print "$min_second_exploded\n";
 print "$min_steps\n";
