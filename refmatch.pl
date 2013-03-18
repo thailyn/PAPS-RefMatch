@@ -82,11 +82,12 @@ my $temp_file_name = 'data/temp-ref-match' . time;
 open($fh, ">", $temp_file_name) or die "$0: Cannot open temp file '$temp_file_name' for writing: $!\n";
 print $fh "References\n";
 
-# Add each reference's string to temp file.
-while (my $ref = $ref_rs->next) {
-  print $fh $ref->reference_text . "\n\n";
-}
-$ref_rs->reset;
+print $fh $ref->reference_text . "\n\n";
+## Add each reference's string to temp file.
+#while (my $ref = $ref_rs->next) {
+#  print $fh $ref->reference_text . "\n\n";
+#}
+#$ref_rs->reset;
 close($fh);
 
 # Use ParsCit to parse citations.
