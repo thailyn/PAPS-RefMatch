@@ -15,6 +15,12 @@ my $verbose = 0;
 my $schema = PAPS::Database::papsdb::Schema->connect('dbi:Pg:dbname=papsdb',
                                                      'papsuser', '');
 
+# Get the user's id value.  Die if it cannot be found.
+my $user_name = 'RefMatch';
+my $user = $schema->resultset('User')->find( { 'me.name' => $user_name }, undef );
+die "$0: Error: User '${user_name}' not found.  Quitting.\n" unless $user;
+my $user_id = $user->id;
+
 # Fetch the set of works
 my $works_rs = $schema->resultset('Work');
 my $works_count = $works_rs->count;
