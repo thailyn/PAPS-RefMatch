@@ -164,6 +164,10 @@ print "$min_second_exploded\n";
 print "$min_steps\n";
 print "\n";
 
+my $current_date_time = DateTime->now();
+$current_date_time->set_time_zone('America/New_York'); # This should be configurable, though, of course.
+my $pg_timestamp = DateTime::Format::Pg->format_timestamp_with_time_zone($current_date_time);
+
 # Test Levenshtein distance algorithm if two strings are provided.
 my ($first_string, $second_string) = @ARGV;
 if (defined $first_string && defined $second_string) {
