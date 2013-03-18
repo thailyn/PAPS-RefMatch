@@ -168,6 +168,18 @@ my $current_date_time = DateTime->now();
 $current_date_time->set_time_zone('America/New_York'); # This should be configurable, though, of course.
 my $pg_timestamp = DateTime::Format::Pg->format_timestamp_with_time_zone($current_date_time);
 
+my $result = $schema->resultset('ReferencedWorkGuess')
+  ->update_or_create(
+                     {
+                      work_reference_id => $ref->id,
+                      guessed_referenced_work_id => $min_work->id,
+                      confidence => $match_percent,
+                      user_id => $user_id,
+                      algorithm_id => $algorithm_id,
+                      version => $VERSION,
+                      last_checked => $pg_timestamp,
+                     });
+
 # Test Levenshtein distance algorithm if two strings are provided.
 my ($first_string, $second_string) = @ARGV;
 if (defined $first_string && defined $second_string) {
