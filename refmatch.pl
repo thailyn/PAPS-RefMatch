@@ -35,6 +35,28 @@ my $ref_count = $schema->resultset('WorkReference')->search('me.referenced_work_
                                                          { order_by => [ 'referencing_work_id', 'id' ]})->count;
 print "Number of references without a referenced work: " . $ref_count . "\n";
 
+# Fetch the set of all references, sorted by the last time the reference was checked.
+my $ref_rs = $schema->resultset('WorkReference')
+  ->search(
+           {
+            -and => [
+                     'me.referenced_work_id' => undef,
+                     -or => [
+                             'referenced_work_guesses_work_references.algorithm_id' => undef,
+                             'referenced_work_guesses_work_references.algorithm_id' => {'=', $algorithm_id},
+                             #'referenced_work_guesses_work_references.version' => {'<=', $VERSION}
+                            ]
+                    ]
+           },
+           {
+            join => [ 'referenced_work_guesses_work_references' ],
+            '+select' => [ 'referenced_work_guesses_work_references.user_id', 'referenced_work_guesses_work_references.algorithm_id',
+                           'referenced_work_guesses_work_references.version', 'referenced_work_guesses_work_references.last_checked',
+                           'referenced_work_guesses_work_references.confidence' ],
+            '+as' => [ 'rwg_user_id', 'rwg_algorithm_id', 'rwg_version', 'rwg_last_checked', 'rwg_confidence' ],
+            order_by => [ 'referenced_work_guesses_work_references.last_checked ASC NULLS FIRST', 'referencing_work_id', 'id' ]
+           });
+
 if ($verbose) {
   print "Works\n";
   while (my $work = $works_rs->next) {
