@@ -143,6 +143,7 @@ while (my $work = $works_rs->next) {
   $progress++;
 }
 
+my $match_percent = ((length($citation->getTitle) - $min_distance) / length($citation->getTitle));
 # Print out the results.
 print "\n\n";
 print "Best match:\n";
@@ -151,7 +152,7 @@ print "Distance: $min_distance\n";
 print "Reference length: " . length($citation->getTitle) . "\n";
 print "Work length:      " . length($min_work->display_name) . "\n";
 print "Length ratio:     " . (length($min_work->display_name) / length($citation->getTitle)) . "\n";
-print "Match percent:    " . ((length($citation->getTitle) - $min_distance) / length($citation->getTitle)) . "\n";
+print "Match percent:    " . $match_percent . "\n";
 print "\n";
 print "Work display name: " . $min_work->display_name . "\n";
 print "Reference text:    " . $citation->getTitle . "\n";
