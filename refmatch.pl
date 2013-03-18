@@ -31,10 +31,8 @@ my $algorithm_id = $algorithm->id;
 my $works_rs = $schema->resultset('Work');
 my $works_count = $works_rs->count;
 
-# Fetch the set of all references, sorted by referencing work
-my $ref_rs = $schema->resultset('WorkReference')->search('me.referenced_work_id' => undef,
-                                                         { order_by => [ 'referencing_work_id', 'id' ]});
-my $ref_count = $ref_rs->count;
+my $ref_count = $schema->resultset('WorkReference')->search('me.referenced_work_id' => undef,
+                                                         { order_by => [ 'referencing_work_id', 'id' ]})->count;
 print "Number of references without a referenced work: " . $ref_count . "\n";
 
 if ($verbose) {
