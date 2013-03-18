@@ -93,13 +93,18 @@ close($fh);
 # Use ParsCit to parse citations.
 my @parse_output = ParsCit::Controller::ExtractCitationsImpl($temp_file_name);
 
-# Pick a random citation to compare against the works.
+## Pick a random citation to compare against the works.
+#my $citations = $parse_output[2];
+#my $citation_index = int(rand(@{ $citations }));
+#my $citation = $citations->[$citation_index];
+
+# Pick the first citation
 my $citations = $parse_output[2];
-my $citation_index = int(rand(@{ $citations }));
-my $citation = $citations->[$citation_index];
+my $citation = $citations->[0];
 
 print "\n";
-print "Using citation #" . $citation_index . ".\n";
+#print "Using citation #" . $citation_index . ".\n";
+print "Using citation #0.\n";
 print "Title:     " . $citation->getTitle . "\n";
 print "Full text: " . $citation->getString . "\n";
 print "\n";
