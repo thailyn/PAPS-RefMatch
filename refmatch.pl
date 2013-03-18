@@ -8,7 +8,7 @@ use Term::ProgressBar::Simple;
 use PAPS::Database::papsdb::Schema;
 use ParsCit::Controller;
 
-my $VERSION = 0.001;
+my $VERSION = 0.002;
 
 my $verbose = 0;
 
