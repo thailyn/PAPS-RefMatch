@@ -126,7 +126,7 @@ print "Full text:           " . $citation->getString . "\n";
 print "\n";
 
 # Use the whole reference text if a title could not be parsed.
-if (length($citation->getTitle) <= 0) {
+if (!$citation->getTitle || length($citation->getTitle) <= 0) {
   print "Warning: Could not extract title from citation.  Using full reference text for title.\n\n";
   $citation->setTitle($citation->getString);
 }
