@@ -4,6 +4,7 @@
 # to see what additional include directories and switches are needed.
 use strict;
 use warnings;
+use utf8;
 use Term::ProgressBar::Simple;
 use PAPS::Database::papsdb::Schema;
 use ParsCit::Controller;
