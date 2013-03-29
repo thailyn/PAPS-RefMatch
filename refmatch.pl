@@ -76,9 +76,11 @@ if ($verbose) {
 
 # Store the first reference, as we will be using it later.
 my $ref = $ref_rs->next;
-print ("=" x 80);
-print "\n";
-print $ref->id . "\t" . ($ref->get_column('rwg_last_checked') || "null") . "\t" . $ref->reference_text . "\n";
+if ($verbose) {
+  print ("=" x 80);
+  print "\n";
+  print $ref->id . "\t" . ($ref->get_column('rwg_last_checked') || "null") . "\t" . $ref->reference_text . "\n";
+}
 
 # Create temp file to hold references.
 my $fh;
