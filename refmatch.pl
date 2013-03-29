@@ -59,10 +59,12 @@ my $ref_rs = $schema->resultset('WorkReference')
             order_by => [ 'referenced_work_guesses_work_references.last_checked ASC NULLS FIRST', 'referencing_work_id', 'id' ]
            });
 
-while (my $ref = $ref_rs->next) {
-  print $ref->id . "\t" . ($ref->get_column('rwg_last_checked') || "null") . "\t" . $ref->reference_text . "\n";
+if ($verbose) {
+  while (my $ref = $ref_rs->next) {
+    print $ref->id . "\t" . ($ref->get_column('rwg_last_checked') || "null") . "\t" . $ref->reference_text . "\n";
+  }
+  $ref_rs->reset;
 }
-$ref_rs->reset;
 
 if ($verbose) {
   print "Works\n";
