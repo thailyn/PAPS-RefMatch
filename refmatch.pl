@@ -115,8 +115,14 @@ my $citation = $citations->[0];
 print "\n";
 #print "Using citation #" . $citation_index . ".\n";
 print "Using citation #0.\n";
-print "Title:     " . $citation->getTitle . "\n";
-print "Full text: " . $citation->getString . "\n";
+print "Id:                  " . $ref->id . "\n";
+print "Referencing work id: " . $ref->referencing_work_id . "\n";
+print "Referenced work id:  " . ($ref->referenced_work_id || "null") . "\n";
+print "Reference type id:   " . ($ref->reference_type_id || "null") . "\n";
+print "Chapter:             " . ($ref->chapter || "null") . "\n";
+print "Rank:                " . ($ref->rank || "null") . "\n";
+print "Title:               " . ($citation->getTitle || "<Unknown>") . "\n";
+print "Full text:           " . $citation->getString . "\n";
 print "\n";
 
 # Use the whole reference text if a title could not be parsed.
