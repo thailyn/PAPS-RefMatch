@@ -134,6 +134,7 @@ my ($min_distance, $min_first_exploded, $min_second_exploded, $min_steps, $min_w
 # Iterate through each work and compute its Levenshtein distance
 # with the selected reference.  Only print each work's results if
 # we want verbose output.  Store the best match's info as we go along.
+$progress->message("Searching for best match...");
 while (my $work = $works_rs->next) {
   my ($distance, $first_exploded, $second_exploded, $steps) =
     levenshtein_distance_detailed($citation->getTitle, $work->display_name);
