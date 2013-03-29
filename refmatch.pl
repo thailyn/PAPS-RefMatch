@@ -165,6 +165,7 @@ my $match_percent = ((length($citation->getTitle) - $min_distance) / length($cit
 print "\n\n";
 print "Best match:\n";
 print "-----------\n";
+print "Work id: " . $min_work->work_id . "\n";
 print "Distance: $min_distance\n";
 print "Reference length: " . length($citation->getTitle) . "\n";
 print "Work length:      " . length($min_work->display_name) . "\n";
