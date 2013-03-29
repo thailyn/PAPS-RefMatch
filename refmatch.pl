@@ -16,7 +16,10 @@ my $VERSION = 0.003;
 my $verbose = 0;
 
 my $schema = PAPS::Database::papsdb::Schema->connect('dbi:Pg:dbname=papsdb',
-                                                     'papsuser', '');
+                                                     'papsuser', '',
+                                                     {
+                                                      pg_enable_utf8 => 1,
+                                                     });
 
 # Get the user's id value.  Die if it cannot be found.
 my $user_name = 'RefMatch';
