@@ -112,6 +112,13 @@ my @parse_output = ParsCit::Controller::ExtractCitationsImpl($temp_file_name);
 my $citations = $parse_output[2];
 my $citation = $citations->[0];
 
+if (!$citation) {
+  print "Warning: Failed to parse any citations.  Using full reference text to create a dummy citation.\n";
+  $citation = ParsCit::Citation->new();
+  $citation->setString($ref->reference_text);
+  $citation->setTitle($citation->getString);
+}
+
 print "\n";
 #print "Using citation #" . $citation_index . ".\n";
 print "Using citation #0.\n";
