@@ -48,19 +48,19 @@ my $ref_rs = $schema->resultset('WorkReference')
             -and => [
                      'me.referenced_work_id' => undef,
                      -or => [
-                             'referenced_work_guesses_work_references.algorithm_id' => undef,
-                             'referenced_work_guesses_work_references.algorithm_id' => {'=', $algorithm_id},
-                             #'referenced_work_guesses_work_references.version' => {'<=', $VERSION}
+                             'referenced_work_guesses.algorithm_id' => undef,
+                             'referenced_work_guesses.algorithm_id' => {'=', $algorithm_id},
+                             #'referenced_work_guesses.version' => {'<=', $VERSION}
                             ]
                     ]
            },
            {
-            join => [ 'referenced_work_guesses_work_references' ],
-            '+select' => [ 'referenced_work_guesses_work_references.user_id', 'referenced_work_guesses_work_references.algorithm_id',
-                           'referenced_work_guesses_work_references.version', 'referenced_work_guesses_work_references.last_checked',
-                           'referenced_work_guesses_work_references.confidence' ],
+            join => [ 'referenced_work_guesses' ],
+            '+select' => [ 'referenced_work_guesses.user_id', 'referenced_work_guesses.algorithm_id',
+                           'referenced_work_guesses.version', 'referenced_work_guesses.last_checked',
+                           'referenced_work_guesses.confidence' ],
             '+as' => [ 'rwg_user_id', 'rwg_algorithm_id', 'rwg_version', 'rwg_last_checked', 'rwg_confidence' ],
-            order_by => [ 'referenced_work_guesses_work_references.last_checked ASC NULLS FIRST', 'referencing_work_id', 'id' ]
+            order_by => [ 'referenced_work_guesses.last_checked ASC NULLS FIRST', 'referencing_work_id', 'id' ]
            });
 
 if ($verbose) {
