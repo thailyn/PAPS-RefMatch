@@ -11,7 +11,7 @@ use ParsCit::Controller;
 use DateTime;
 use DateTime::Format::Pg;
 
-my $VERSION = 0.003;
+my $VERSION = 0.004;
 
 my $verbose = 0;
 
