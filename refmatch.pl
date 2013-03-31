@@ -226,9 +226,7 @@ my $result = $schema->resultset('ReferencedWorkGuess')
                       work_reference_id => $ref->id,
                       guessed_referenced_work_id => $min_work->id,
                       confidence => $match_percent,
-                      user_id => $user_id,
-                      algorithm_id => $algorithm_id,
-                      version => $VERSION,
+                      persona_id => $persona_id,
                       last_checked => $pg_timestamp,
                      });
 
