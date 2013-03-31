@@ -58,18 +58,18 @@ my $ref_rs = $schema->resultset('WorkReference')
             -and => [
                      'me.referenced_work_id' => undef,
                      -or => [
-                             'referenced_work_guesses.algorithm_id' => undef,
-                             'referenced_work_guesses.algorithm_id' => {'=', $algorithm_id},
-                             #'referenced_work_guesses.version' => {'<=', $VERSION}
+                             'persona.algorithm_id' => undef,
+                             'persona.algorithm_id' => {'=', $algorithm_id},
+                             #'persona.version' => {'<=', $VERSION}
                             ]
                     ]
            },
            {
-            join => [ 'referenced_work_guesses' ],
-            '+select' => [ 'referenced_work_guesses.user_id', 'referenced_work_guesses.algorithm_id',
-                           'referenced_work_guesses.version', 'referenced_work_guesses.last_checked',
+            join => { 'referenced_work_guesses' => 'persona' },
+            '+select' => [ 'persona.user_id', 'persona.algorithm_id',
+                           'persona.version', 'referenced_work_guesses.last_checked',
                            'referenced_work_guesses.confidence' ],
-            '+as' => [ 'rwg_user_id', 'rwg_algorithm_id', 'rwg_version', 'rwg_last_checked', 'rwg_confidence' ],
+            '+as' => [ 'p_user_id', 'p_algorithm_id', 'p_version', 'rwg_last_checked', 'rwg_confidence' ],
             order_by => [ 'referenced_work_guesses.last_checked ASC NULLS FIRST', 'referencing_work_id', 'id' ]
            });
 
