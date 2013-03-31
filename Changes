@@ -1,0 +1,64 @@
+Revision history for PAPS-RefMatch
+
+0.004  Sun Mar 31 14:04:01 2013 -0400
+  New features:
+    - Get and use an appropriate persona from the database, so changes are
+      correctly attributed to this script, and the correct version of it.
+      Getting this persona requires fetching the correct user and algorithm
+      from the database.  If these or fetching the persona fails (e.g., they
+      do not exist, the script will die with an error message.
+    - When fetching work references without a referenced work id, fetch those
+      that either do not have a guess, or have a guess by this algorithm.
+      Known issue: this query does not return work references that have a
+      guess by a different algorithm, irrespective of whether this algorithm
+      has made a guess or not.
+    - Only write the first suitable work reference reference text to a file to
+      be parsed by ParsCit.  Always use the first valid citation ParsCit
+      returns.
+    - Update or create the referenced work guess in the database.  Use the
+      current timestamp for the last_checked value.
+    - Only print out various debugging information when in 'verbose' mode.
+      This mode cannot be set via the command line and must be set inside the
+      script.  Normal use should not need the verbose mode.
+    - Include additional metadata about the work and the work reference before
+      and after searching for the best match.
+  Bug fixes:
+    - Enable UTF-8 in the connection with the database, so UTF-8 characters in
+      reference text is interpreted correctly.
+    - Use a hash reference in the WorkReference search condition.  Using a
+      hash for this parameter is deprecated.
+    - Check that a citation's text is non-null before trying to compute its
+      length.  If ParsCit could not determine the citation's title, the
+      getTitle accessor returns a null value.
+    - If ParsCit does not find a citation in the reference text, create a
+      dummy citation whose string and title are equal to the full reference
+      text.
+  Other:
+    - Added the "use utf8" pragma, so the script is interpreted as using the
+      UTF-8 encoding.
+
+0.002  Mon Mar 18 01:45:20 2013 -0400
+  Other:
+    - Fixed line endings.
+    - Future stable versions will be even numbers.  Odd version numbers will
+      be reserved for unstable versions.
+
+0.001  Sun Mar 17 17:57:02 2013 -0400
+  New features:
+    - Initial version of PAPS-RefMatch.  Fetches all works and all references
+      without a referenced work id.  Writes the text of each of these
+      references to a file, and parses them with ParsCit.  Picks a random
+      citation that was parsed, and compares it against the display name of
+      each work, using the Levenshtein distance algorithm.  The display name
+      that is the closest match is saved, and its comparison against the
+      selected reference is printed.
+    - Includes two version of the Levenshtein distance algorithm.  The
+      'levenshtein_distance' subroutine simply computes the distance between
+      two strings and returns it.  The 'levenshtein_distance_detailed'
+      computes the distance, as well, but also keeps track of which changes
+      must be done to convert one of the strings into the other.  This
+      conversion is stored as a set of strings, which, when printed
+      vertically, correctly lines up both input strings, respecting insertions
+      and substitutions.  Both versions of the algorithm use the
+      "no warnings 'recursion'" pragma to avoid warning messages when the
+      recursive calls reach sufficient depth.
