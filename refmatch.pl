@@ -33,6 +33,16 @@ my $algorithm = $schema->resultset('Algorithm')->find( { 'me.name' => $algorithm
 die "$0: Error: Id for algorithm '${algorithm_name}' not found.  Quitting.\n" unless $algorithm;
 my $algorithm_id = $algorithm->id;
 
+# Get the persona's id value.  Die if it cannot be found.
+my $persona = $schema->resultset('Persona')->find(
+                                                  {
+                                                   'me.user_id' => $user_id,
+                                                   'me.algorithm_id' => $algorithm_id,
+                                                   'me.version' => $VERSION,
+                                                  }, undef );
+die "$0: Error: Id for persona for user id ${user_id}, algorithm id ${algorithm_id}, and version $VERSION not found.  Quitting.\n" unless $persona;
+my $persona_id = $persona->id;
+
 # Fetch the set of works
 my $works_rs = $schema->resultset('Work');
 my $works_count = $works_rs->count;
