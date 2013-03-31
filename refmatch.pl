@@ -73,6 +73,25 @@ my $ref_rs = $schema->resultset('WorkReference')
             order_by => [ 'referenced_work_guesses.last_checked ASC NULLS FIRST', 'referencing_work_id', 'id' ]
            });
 
+# Note: the above search is not completely correct.  It will not return rows
+# that have been process by other algorithms, only those that have been never
+# processes or processed by this algorithm.  The search conditions on the
+# persona table need to be in the ON clause of the JOIN, not in the WHERE
+# clause.  DBIx::Class does not support this currently, so, most likely, a
+# custom view must be created.  The SQL should be something like:
+#
+# SELECT me.id, me.referencing_work_id, me.referenced_work_id,
+# 	me.reference_type_id, me.rank, me.chapter,
+# 	me.reference_text, me.persona_id, me.modified,
+# 	persona.user_id, persona.algorithm_id, persona.version,
+# 	referenced_work_guesses.last_checked, referenced_work_guesses.confidence
+# FROM work_references me
+# LEFT JOIN referenced_work_guesses referenced_work_guesses ON referenced_work_guesses.work_reference_id = me.id
+# LEFT JOIN personas persona ON persona.id = referenced_work_guesses.persona_id
+# 	and (persona.algorithm_id is null or persona.algorithm_id = 2)
+# WHERE ( me.referenced_work_id IS NULL )
+# ORDER BY referenced_work_guesses.last_checked ASC NULLS FIRST, referencing_work_id, id;
+
 if ($verbose) {
   while (my $ref = $ref_rs->next) {
     print $ref->id . "\t" . ($ref->get_column('rwg_last_checked') || "null") . "\t" . $ref->reference_text . "\n";
